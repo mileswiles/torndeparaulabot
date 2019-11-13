@@ -1,67 +1,53 @@
-# -*- coding: utf-8 -*-
- 
- 
- 
-import telebot # Librería de la API del bot.
- 
-from telebot import types # Tipos para la API del bot.
- 
-import time # Librería para hacer que el programa que controla el bot no se acabe.
- 
- 
- 
- 
- 
-# Aqui definiremos aparte del Token, por ejemplo los ids de los grupos y pondríamos grupo= -XXXXX 
- 
- 
- 
-TOKEN = '927270269:AAEMr5W9cgYjmFP7OMvhBwYojf7C7VT8xGo'  # Nuestro token del bot.
- 
- 
- 
-AYUDA = 'Puedes utilizar los siguientes comandos : \n\n/ayuda - Guia para utilizar el bot. \n/info - Informacion De interes \n/hola - Saludo del Bot \n/piensa3D - Informacion sobre Piensa3D \n\n'
- 
- 
- 
-GRUPO = -XXXXXX #Definimos que cuando pongamos la palabra grupo lo vincule con el Id del grupo donde nos encontremos.  Al meter el bot en un grupo, en la propia consola nos saldrá
- 
- 
- 
- 
- 
- 
- 
- 
- 
-bot = telebot.TeleBot(TOKEN) # Creamos el objeto de nuestro bot.
- 
-############################################# 
- 
-#Listener
- 
-def listener(messages): # Con esto, estamos definiendo una función llamada 'listener', que recibe como parámetro un dato llamado 'messages'.
- 
-    for m in messages: # Por cada dato 'm' en el dato 'messages'
- 
-        cid = m.chat.id # El Cid es el identificador del chat los negativos son grupos y positivos los usuarios
- 
-        if cid > 0:
- 
-            mensaje = str(m.chat.first_name) + " [" + str(cid) + "]: " + m.text # Si 'cid' es positivo, usaremos 'm.chat.first_name' para el nombre.
- 
-        else:
- 
-            mensaje = str(m.from_user.first_name) + "[" + str(cid) + "]: " + m.text # Si 'cid' es negativo, usaremos 'm.from_user.first_name' para el nombre.
- 
-        f = open( 'log.txt', 'a') # Abrimos nuestro fichero log en modo 'Añadir'.
- 
-        f.write(mensaje + "\n") # Escribimos la linea de log en el fichero.
- 
-        f.close() # Cerramos el fichero para que se guarde.
- 
-        print(mensaje) # Imprimimos el mensaje en la terminal, que nunca viene mal :) 
- 
- 
- 
-bot.set_update_listener(listener) # Así, le decimos al bot que utilice como función escuchadora nuestra función 'listener' declarada arriba.
+import logging
+import os
+import random
+import sys
+
+from telegram.ext import Updater, CommandHandler
+
+# Enabling logging
+logging.basicConfig(level=logging.INFO,
+                    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+logger = logging.getLogger()
+
+# Getting mode, so we could define run function for local and Heroku setup
+mode = os.getenv("MODE")
+TOKEN = os.getenv("TOKEN")
+if mode == "dev":
+    def run(updater):
+        updater.start_polling()
+elif mode == "prod":
+    def run(updater):
+        PORT = int(os.environ.get("PORT", "8443"))
+        HEROKU_APP_NAME = os.environ.get("HEROKU_APP_NAME")
+        # Code from https://github.com/python-telegram-bot/python-telegram-bot/wiki/Webhooks#heroku
+        updater.start_webhook(listen="0.0.0.0",
+                              port=PORT,
+                              url_path=TOKEN)
+        updater.bot.set_webhook("https://{}.herokuapp.com/{}".format(HEROKU_APP_NAME, TOKEN))
+else:
+    logger.error("No MODE specified!")
+    sys.exit(1)
+
+
+def start_handler(bot, update):
+    # Creating a handler-function for /start command 
+    logger.info("User {} started bot".format(update.effective_user["id"]))
+    update.message.reply_text("Hello from Python!\nPress /random to get random number")
+
+
+def random_handler(bot, update):
+    # Creating a handler-function for /random command
+    number = random.randint(0, 10)
+    logger.info("User {} randomed number {}".format(update.effective_user["id"], number))
+    update.message.reply_text("Random number: {}".format(number))
+
+
+if __name__ == '__main__':
+    logger.info("Starting bot")
+    updater = Updater(TOKEN)
+
+    updater.dispatcher.add_handler(CommandHandler("start", start_handler))
+    updater.dispatcher.add_handler(CommandHandler("random", random_handler))
+
+    run(updater)
