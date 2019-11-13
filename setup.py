@@ -60,7 +60,7 @@ def listener(messages): # Con esto, estamos definiendo una función llamada 'lis
  
         f.close() # Cerramos el fichero para que se guarde.
  
-        print mensaje # Imprimimos el mensaje en la terminal, que nunca viene mal :) 
+        print(mensaje) # Imprimimos el mensaje en la terminal, que nunca viene mal :) 
  
  
  
