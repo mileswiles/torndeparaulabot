@@ -2,21 +2,21 @@
  
  
  
-import telebot # Librería de la API del bot.
+import telebot # LibrerÃ­a de la API del bot.
  
 from telebot import types # Tipos para la API del bot.
  
-import time # Librería para hacer que el programa que controla el bot no se acabe.
+import time # LibrerÃ­a para hacer que el programa que controla el bot no se acabe.
  
  
  
  
  
-# Aqui definiremos aparte del Token, por ejemplo los ids de los grupos y pondríamos grupo= -XXXXX 
+# Aqui definiremos aparte del Token, por ejemplo los ids de los grupos y pondrÃ­amos grupo= -XXXXX 
  
  
  
-TOKEN = '432445414:AAHAL04HO4Jx_gw8Wxbx_F72RjiXUfNBJjU' # Nuestro token del bot.
+TOKEN = '927270269:AAEMr5W9cgYjmFP7OMvhBwYojf7C7VT8xGo'  # Nuestro token del bot.
  
  
  
@@ -24,7 +24,7 @@ AYUDA = 'Puedes utilizar los siguientes comandos : \n\n/ayuda - Guia para utiliz
  
  
  
-GRUPO = -XXXXXX #Definimos que cuando pongamos la palabra grupo lo vincule con el Id del grupo donde nos encontremos.  Al meter el bot en un grupo, en la propia consola nos saldrá
+GRUPO = -XXXXXX #Definimos que cuando pongamos la palabra grupo lo vincule con el Id del grupo donde nos encontremos.  Al meter el bot en un grupo, en la propia consola nos saldrÃ¡
  
  
  
@@ -40,7 +40,7 @@ bot = telebot.TeleBot(TOKEN) # Creamos el objeto de nuestro bot.
  
 #Listener
  
-def listener(messages): # Con esto, estamos definiendo una función llamada 'listener', que recibe como parámetro un dato llamado 'messages'.
+def listener(messages): # Con esto, estamos definiendo una funciÃ³n llamada 'listener', que recibe como parÃ¡metro un dato llamado 'messages'.
  
     for m in messages: # Por cada dato 'm' en el dato 'messages'
  
@@ -54,7 +54,7 @@ def listener(messages): # Con esto, estamos definiendo una función llamada 'list
  
             mensaje = str(m.from_user.first_name) + "[" + str(cid) + "]: " + m.text # Si 'cid' es negativo, usaremos 'm.from_user.first_name' para el nombre.
  
-        f = open( 'log.txt', 'a') # Abrimos nuestro fichero log en modo 'Añadir'.
+        f = open( 'log.txt', 'a') # Abrimos nuestro fichero log en modo 'AÃ±adir'.
  
         f.write(mensaje + "\n") # Escribimos la linea de log en el fichero.
  
@@ -64,4 +64,4 @@ def listener(messages): # Con esto, estamos definiendo una función llamada 'list
  
  
  
-bot.set_update_listener(listener) # Así, le decimos al bot que utilice como función escuchadora nuestra función 'listener' declarada arriba.
+bot.set_update_listener(listener) # AsÃ­, le decimos al bot que utilice como funciÃ³n escuchadora nuestra funciÃ³n 'listener' declarada arriba.
